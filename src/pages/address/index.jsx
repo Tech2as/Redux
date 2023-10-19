@@ -2,14 +2,34 @@ import { useState } from 'react'
 import styles from './address.module.css'
 import { Header } from '../../components/header'
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import {addAddress, deleteAddress} from '../../redux/user/slice'
+
 
 export function Address() {
-  const [addressName, setAddressName] = useState("")
-  const [addressNumber, setAddressNumber] = useState("")
+  const dispatch = useDispatch();
+
+  const { user } = useSelector((rootReducer) => rootReducer.user) 
+  // podemos encadear informaçoes de objetos com o ? para tentar acessar dados que podem vier undefinied
+  const [addressName, setAddressName] = useState(user?.address?.location ?? "")
+  const [addressNumber, setAddressNumber] = useState(user?.address?.number ?? "")
+
+
 
 
   function handleRegisterAddress(){
-    console.log(addressName, addressNumber)
+    dispatch(addAddress({
+      location: addressName,
+      number: addressNumber,
+    }))
+  }
+
+  //deletar endereço
+  function handleDeleteAddress(){
+    dispatch(deleteAddress())
+    setAddressName("")
+    setAddressNumber("")
+    alert("Deletado!")
   }
 
   return (
@@ -22,6 +42,13 @@ export function Address() {
             <Link to="/painel">
               Voltar para o painel
             </Link>
+
+           {//se tiver um usuario logado e se tiver um user.address
+           user && user?.address && (
+            <button className={styles.buttonDelete} onClick={handleDeleteAddress}>
+              Deletar endereço
+            </button>
+           )}
           </div>
 
           <section className={styles.address}>

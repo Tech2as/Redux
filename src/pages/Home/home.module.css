@@ -56,3 +56,25 @@
   background-color: #333333;
   color: #FFF;
 }
+h2{
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.btnuser{
+  border: 0;
+  background-color: #3366FF;
+  padding: 8px 24px;
+  border:0;
+  border-radius: 4px;
+  color: #FFF;
+  font-weight: bold; 
+}
+
+.divuser{
+  display:flex;
+}
+
+.puser{
+  padding: 2px;
+}

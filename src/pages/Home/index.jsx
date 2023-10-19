@@ -1,11 +1,21 @@
 import styles from './home.module.css'
 import { Header } from '../../components/header'
 import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import {deleteAddress,fetchUsers} from '../../redux/user/slice'
 
 export function Home() {
 
+  const { user, users, loading } = useSelector((rootReducer) => rootReducer.user);
+  const dispatch = useDispatch();
+  
   function handleDeleteAddress(){
+    dispatch(deleteAddress())
     alert("Endereço deletado com sucesso!")
+  }
+
+  function handleFetchUsers(){
+    dispatch(fetchUsers())
   }
 
   return (
@@ -27,19 +37,40 @@ export function Home() {
         <main className={styles.content}>
           <div className={styles.message}>
             <h1 className={styles.title}>
-              Olá Visitante, bem vindo!
+              Olá {user ?  user.name : "Visitante"}, bem vindo!
             </h1>
 
-            <span>Email: ....</span>
+            {//se tiver um user
+              user && (
+                <span>Email: {user.email}</span>
+            )}
 
 
-            <strong className={styles.addressLabel}>Endereço atual:</strong>
-            <div className={styles.address}>
-              <p>Rua centro, n 123</p>
+           {//se tiver um user e um user.address
+              user && user.address &&(
+                <>
+                 <strong className={styles.addressLabel}>Endereço atual:</strong>
+                  <div className={styles.address}>
+                    <p>{user.address.location}, n{user.address.number}</p>
               
-              <button onClick={handleDeleteAddress}>Deletar endereço</button>
-            </div>
+                    <button onClick={handleDeleteAddress}>Deletar endereço</button>
+                  </div>
+                </>
+              )
 
+           }
+            <hr/>
+            <br/>
+            <h2>Lista de usuários</h2>
+            <button className={styles.btnuser} onClick={handleFetchUsers}>Buscar usuários</button>
+            <br/>
+            {loading && <strong>Carregando usuários...</strong>}
+            
+            {!loading && users.map( (user) => (
+              <div className={styles.divuser} key={user.id}>
+                <p className={styles.puser}>ID: {user.id} | {user.name} | {user.email}</p>
+              </div>
+            ))}
           </div>
 
         </main>
